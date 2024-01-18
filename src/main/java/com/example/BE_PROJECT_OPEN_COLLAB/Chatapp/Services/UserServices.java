@@ -15,7 +15,9 @@ public class UserServices {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public void saveUser(User user){
+	public void saveUser(String username){
+		User user=new User();
+		user.setUsername(username);
 		user.setStatus(Status.Online);
 		userRepository.save(user);
 	}
