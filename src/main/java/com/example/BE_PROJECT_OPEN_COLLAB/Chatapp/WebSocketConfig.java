@@ -28,7 +28,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.setApplicationDestinationPrefixes("/app");  //for sending data to queues eg app/user.addUser
-		config.setUserDestinationPrefix("/user"); //single user
 		config.enableSimpleBroker("/users"); //group of user
 	}
 

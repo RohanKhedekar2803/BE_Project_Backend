@@ -23,8 +23,9 @@ public class ChatMessage {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id; 
-	private String chatId;  
+	private Long chatMessageid; 
+	
+	private String chatroomId;  
 	private String senderId;
 	private String receiverId;
 	private String content;

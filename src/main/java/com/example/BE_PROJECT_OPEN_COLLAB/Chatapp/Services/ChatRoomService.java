@@ -14,35 +14,31 @@ public class ChatRoomService {
 	private ChatRoomRepository chatroomRepository;
 	
 	public String getChatRoomId(String senderId , String receiverId,boolean newRoomIfNotExists) {
-		
+		System.out.println("in service");
 		//chatroom id
 		Optional<ChatRoom> chatroom=
 				chatroomRepository.findBySenderIdAndReceiverId(senderId,receiverId);
 		
 		if(chatroom.isPresent()) {
-			return chatroom.get().getId();
+			return chatroom.get().getChatroomId();
 		}
 		
 		if(newRoomIfNotExists) {
-			var chatid=String.format(("%s_%s"), senderId,receiverId);
+			var ChatRoomId=String.format(("%s_%s"), senderId,receiverId);
 			
-			//create new 2 chatrooms 
+			//create new chatroom
 			ChatRoom senderReciverChatroom=ChatRoom.builder()
-					.chatId(chatid)
+					.chatroomId(ChatRoomId)
 					.senderId(senderId)
 					.receiverId(receiverId)
 					.build();
 			
-			ChatRoom reciverSenderChatroom=ChatRoom.builder()
-					.chatId(chatid)
-					.senderId(receiverId)
-					.receiverId(senderId)
-					.build();
 			
 			chatroomRepository.save(senderReciverChatroom);
-			chatroomRepository.save(reciverSenderChatroom);
-			
-			return chatid;
+
+			System.out.println("saved" + senderReciverChatroom);
+			System.out.println("saved" + ChatRoomId);
+			return ChatRoomId;
 		}
 		
 		//deadcode

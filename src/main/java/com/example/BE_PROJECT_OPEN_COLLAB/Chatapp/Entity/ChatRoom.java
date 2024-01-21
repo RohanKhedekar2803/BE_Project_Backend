@@ -17,8 +17,7 @@ import lombok.Setter;
 public class ChatRoom {
 	
 	@Id
-	public String id;
-	private String chatId;
+	public String chatroomId;
 	private String senderId;
 	private String receiverId;
 }

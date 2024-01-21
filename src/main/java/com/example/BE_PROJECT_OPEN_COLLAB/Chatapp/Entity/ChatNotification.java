@@ -1,5 +1,7 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatNotification {
-	private String messageId;
+public class ChatNotification implements Serializable{
+	private Long messageId;
+	private String chatroomId;
 	private String senderId;
 	private String receiverId;
 	private String content;

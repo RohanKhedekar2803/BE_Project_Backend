@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatMessageRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.UserServices;
@@ -40,17 +41,27 @@ public class UserController {
 	
 	@MessageMapping("/user.addUser")
 	@SendTo("/users/topic")
-	public ChatMessage addUser(@Payload ChatMessage chatmsg) {
+	public ChatNotification addUser(@Payload ChatMessage chatmsg) {
 		System.out.println("Sending to users/topic");
 		userServices.saveUser(chatmsg.getSenderId());
+		
 		
 		ChatMessage msg= ChatMessage.builder()
 				.senderId(chatmsg.getSenderId())
 				.receiverId("ALL")
 				.timeStamp(date)
 				.content(chatmsg.getContent())
+				.chatroomId("global")
 				.build();
-		return chatMessageRepository.save(msg);
+		ChatMessage chat=chatMessageRepository.save(msg);
+		ChatNotification notification= ChatNotification.builder()
+				.senderId(msg.getSenderId())
+				.receiverId(msg.getReceiverId())
+				.content(msg.getContent())
+				.chatroomId(msg.getChatroomId())
+				.messageId(msg.getChatMessageid())
+				.build();
+		return notification;
 	}
 	
 	@MessageMapping("/user.disconnectUser")

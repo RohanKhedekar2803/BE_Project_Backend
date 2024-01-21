@@ -16,6 +16,6 @@ public interface ChatRoomRepository extends CrudRepository<ChatRoom, String>{
 
 	ChatMessage save(ChatMessage chatMessage);
 
-	List<ChatMessage> findAllByChatId(String chatId);
+	
 
 }

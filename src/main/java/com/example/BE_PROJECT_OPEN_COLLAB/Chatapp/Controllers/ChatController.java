@@ -1,5 +1,6 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
-
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,21 @@ public class ChatController {
 			@PathVariable("senderId") String senderId,
 			@PathVariable("receiverId") String receiverId
 			){
+		
 		return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
 	}
 	
 	@MessageMapping("/chat")
 	public void ProcessMessage(@Payload ChatMessage chatMessage) {
+		
+		HashMap<String, Object>hs=new HashMap<>();
+		System.out.println("in controller");
 		ChatMessage	savedMessage=chatMessageService.save(chatMessage);
-		messagingTemplatequeue.convertAndSendToUser(chatMessage.getReceiverId(),"/queue/messages",
-				ChatNotification.builder()
-				.messageId(chatMessage.getChatId())
+		System.out.println("/users/rohan/queue/messages");
+		messagingTemplatequeue.convertAndSend("/users/"+chatMessage.getReceiverId()+"/queue/messages",
+				(Serializable) ChatNotification.builder()
+				.messageId(chatMessage.getChatMessageid())
+				.chatroomId(chatMessage.getChatroomId())
 				.senderId(chatMessage.getSenderId())
 				.receiverId(chatMessage.getReceiverId())
 				.content(chatMessage.getContent())
