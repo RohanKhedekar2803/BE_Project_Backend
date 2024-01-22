@@ -29,5 +29,5 @@ public class ChatMessage {
 	private String senderId;
 	private String receiverId;
 	private String content;
-	private Date timeStamp;
+	private String timeStamp;
 }

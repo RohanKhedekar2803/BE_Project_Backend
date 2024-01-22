@@ -18,6 +18,7 @@ import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatMessageRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.UserServices;
+import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 
 import java.text.SimpleDateFormat;  
 import java.util.Date;
@@ -28,8 +29,7 @@ import lombok.Builder;
 @Controller
 public class UserController {
 	
-	SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
-    Date date = new Date(); 
+	 
 	@Autowired
 	private UserServices userServices;
 	
@@ -49,7 +49,7 @@ public class UserController {
 		ChatMessage msg= ChatMessage.builder()
 				.senderId(chatmsg.getSenderId())
 				.receiverId("ALL")
-				.timeStamp(date)
+				.timeStamp(DateTimeUtils.getCurrentDateTimeInIndia())
 				.content(chatmsg.getContent())
 				.chatroomId("global")
 				.build();
