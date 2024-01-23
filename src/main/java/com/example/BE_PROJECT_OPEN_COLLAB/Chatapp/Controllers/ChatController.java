@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.ChatMessageService;
+import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
@@ -40,7 +41,7 @@ public class ChatController {
 	@MessageMapping("/chat")
 	public void ProcessMessage(@Payload ChatMessage chatMessage) {
 		
-		HashMap<String, Object>hs=new HashMap<>();
+		chatMessage.setTimeStamp(DateTimeUtils.getCurrentDateTimeInIndia());
 		System.out.println("in controller");
 		ChatMessage	savedMessage=chatMessageService.save(chatMessage);
 		System.out.println("/users/rohan/queue/messages");
