@@ -4,7 +4,15 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
+
 public class DateTimeUtils {
+	
+	@Autowired
+	RepoRepository repoRepository;
+	
     private static final ZoneId INDIA_ZONE = ZoneId.of("Asia/Kolkata");
 
     private DateTimeUtils() {
@@ -29,5 +37,14 @@ public class DateTimeUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         return indiaTime.format(formatter);
+    }
+    
+    public static LocalDateTime saveEntityWithDateTimeString(String dateTimeString) {
+        // Parse the date-time string into a LocalDateTime object
+    	
+//        String dateTimeString = "2017-11-29T17:35:03Z";
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ISO_DATE_TIME);
+
+        return dateTime;
     }
 }
