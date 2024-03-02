@@ -42,5 +42,8 @@ public class User {
     
     
     private Status status;
+    
+    @Builder.Default
+    private Boolean isOrganization=false;
 
 }

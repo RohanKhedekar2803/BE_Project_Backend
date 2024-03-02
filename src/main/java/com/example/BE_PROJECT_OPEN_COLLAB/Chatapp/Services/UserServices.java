@@ -56,6 +56,7 @@ public class UserServices {
 					.status(Status.Online)
 					.password(newUser.getPassword())
 					.username(newUser.getUsername())
+					.isOrganization(newUser.getIsOrganization())
 					.build();
 			
 			
