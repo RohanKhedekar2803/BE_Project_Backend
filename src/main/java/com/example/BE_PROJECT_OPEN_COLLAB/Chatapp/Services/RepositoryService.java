@@ -2,6 +2,7 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,8 +12,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.UserRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service
@@ -48,6 +51,15 @@ public class RepositoryService {
 
 		return pagedResult.getContent();
 	}
+	
+	public Repositor getRepoById(Long id) throws Exception{
+		
+			Repositor repository =repoRepository.findById(id);
+			
+			if(repository==null)throw new CustomException("repository with "+ id + " doesn't exist");
+			
+			return repository;	
+	}
 
 	static Specification<Repositor> withHasLanguage(String hasLanguage) {
 		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), hasLanguage);
@@ -56,5 +68,6 @@ public class RepositoryService {
 	static Specification<Repositor> withTopicContaining(String topic) {
 		return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%'" + topic + "'%");
 	}
+
 
 }

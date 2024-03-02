@@ -58,4 +58,9 @@ public class RepositoryController {
 
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<Repositor> getRepositoryById(@PathVariable("id") Long id) throws Exception{
+		Repositor repo =repositoryService.getRepoById(id);
+		return new ResponseEntity<Repositor>(repo,HttpStatus.OK);
+	}
 }

@@ -20,6 +20,7 @@ import org.springframework.http.*;
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Status;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteLanguage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteTopic;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteLanguagesRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteTopicsRepository;
@@ -38,18 +39,18 @@ public class UserServices {
 	
 	@Autowired
 	private FavouriteTopicsRepository favouriteTopicsRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
-	public void saveUser(User newUser) throws CustomException{
+	public User saveUser(User newUser) throws CustomException{
 		
-		    
-		System.out.println(newUser.getUsername());
 		
 			Optional<User> checkUser=userRepository.findById(newUser.getUsername());
 			if(checkUser.isPresent()) {
 				System.out.println("already there");
 				throw new CustomException("user already exists");
-			}
-//			
+			}			
 			//create user
 			User user = User.builder()
 					.status(Status.Online)
@@ -64,11 +65,12 @@ public class UserServices {
 			List<FavouriteLanguage> languageList=saveAllFavouriteLanguages(langs);
 			user.setFavouriteLanguages(languageList);
 				
-//			List<String> topics=getLanguagesUsedByUser(user.getUsername());
-//			ArrayList<FavouriteLanguage> topicList=favouriteLanguagesRepository.saveAll(topics);
-//			user.setFavouriteLanguages(topicList);
+			List<String> topics=getTopicsUsedByUser(user.getUsername());
+			List<FavouriteTopic> topicList=saveAllFavouriteTopics(topics);
+			user.setFavouriteTopic(topicList);
 			
-			userRepository.save(user);
+			User saveduser = userRepository.save(user);
+			return saveduser;
 		
 	}
 
@@ -84,10 +86,20 @@ public class UserServices {
 		return userRepository.findAllByStatus(Status.Online);
 	}
 	
-	
-	@Autowired
-	private RestTemplate restTemplate;
-	
+	public User verifyUsernameAndPassword(String Username, String Password){
+		
+		Optional<User> checkUser=userRepository.findById(Username);
+		if(checkUser.isEmpty()) {
+			System.out.println("already there");
+			throw new CustomException("username is not valid");
+		}else {
+			if(!checkUser.get().getPassword().equals(Password)) {
+				throw new CustomException("username & password do not match");
+			}
+		}
+		return checkUser.get();
+	}
+	//helper for services 
 	public List<String> getLanguagesUsedByUser(String username) {
 		System.out.println("in it");
 	    String reposUrl = "https://api.github.com/users/" + username + "/repos";
@@ -101,7 +113,7 @@ public class UserServices {
 	        List<String> languages = new ArrayList<>();
 	        for (JsonNode repo : reposJson) {
 	            String language = repo.get("language").asText();
-	            if(!language.equals("null")) {
+	            if(!language.equals("null")  && !languages.contains(language)) {
 	            	languages.add(language);
 	            }
 	        }
@@ -110,7 +122,6 @@ public class UserServices {
 	    } catch (HttpClientErrorException ex) {
 	        if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
 	        	System.out.println("in error");
-	            // User not found or no public repositories
 	            return Collections.emptyList();
 	        } else {
 	            // Handle other potential errors (e.g., log the exception)
@@ -121,30 +132,36 @@ public class UserServices {
 	}
 	
 	public List<String> getTopicsUsedByUser(String username) {
+		System.out.println("in it");
 	    String reposUrl = "https://api.github.com/users/" + username + "/repos";
-	    JSONArray reposArray = restTemplate.getForObject(reposUrl, JSONArray.class);
+	    ObjectMapper mapper = new ObjectMapper();
 
-	    Map<String, Integer> topicsMap = new HashMap<>();
-	    for (int i = 0; i < reposArray.length(); i++) {
-	        JSONObject repoObject = reposArray.getJSONObject(i);
-	        String topicsUrl = repoObject.getString("topics_url");
-	        JSONArray topicsArray = restTemplate.getForObject(topicsUrl, JSONArray.class);
-
-	        for (int j = 0; j < topicsArray.length(); j++) {
-	            String topic = topicsArray.getString(j);
-
-	            // Count occurrences of each topic
-	            topicsMap.merge(topic, 1, Integer::sum);
+	    try {
+	        JsonNode reposJson = restTemplate.getForObject(reposUrl, JsonNode.class);
+	        System.out.println(reposJson+ "random");
+	       
+	        // Iterate through repositories and extract languages
+	        List<String> topics = new ArrayList<>();
+	        for (JsonNode repo : reposJson) {
+	            String topic = repo.get("topics").asText();
+	            
+	            if(!topic.equals("") && !topic.equals(null) && !topic.equals("null")  && !topics.contains(topic)) {
+	            	topics.add(topic);
+	            	System.out.println(topic +  "its topic");
+	            }
+	        }
+	        
+	        return topics;
+	    } catch (HttpClientErrorException ex) {
+	        if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+	        	System.out.println("in error");
+	            return Collections.emptyList();
+	        } else {
+	            // Handle other potential errors (e.g., log the exception)
+	            throw ex;
 	        }
 	    }
-
-	    // Sort topics based on occurrence count
-	    List<String> sortedTopics = topicsMap.entrySet().stream()
-	                            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-	                            .map(Map.Entry::getKey)
-	                            .collect(Collectors.toList());
-
-	    return sortedTopics;
+	
 	}
 	
 	public List<FavouriteLanguage> saveAllFavouriteLanguages(List<String> languages) {
@@ -155,6 +172,16 @@ public class UserServices {
             favouriteLanguages.add(favouriteLanguage);
         }
         return (List<FavouriteLanguage>) favouriteLanguagesRepository.saveAll(favouriteLanguages);
+    }
+	
+	public List<FavouriteTopic> saveAllFavouriteTopics(List<String> Topics) {
+        List<FavouriteTopic> favouriteTopics = new ArrayList<>();
+        for (String topic : Topics) {
+            FavouriteTopic favouriteTopic = new FavouriteTopic();
+            favouriteTopic.setTopicname(topic);
+            favouriteTopics.add(favouriteTopic);
+        }
+        return (List<FavouriteTopic>) favouriteTopicsRepository.saveAll(favouriteTopics);
     }
 
 }
