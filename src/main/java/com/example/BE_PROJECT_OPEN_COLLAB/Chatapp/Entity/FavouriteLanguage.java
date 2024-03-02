@@ -1,12 +1,11 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,19 +14,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class ChatMessage {
-
+public class FavouriteLanguage {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long chatMessageid;
-
-	private String chatroomId;
-	private String senderId;
-	private String receiverId;
-	private String content;
-	private String timeStamp;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+	private String LanguageName;
+	
 }

@@ -1,10 +1,12 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,36 +24,27 @@ import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
 public class ChatController {
-	
+
 	@Autowired
 	public ChatMessageService chatMessageService;
-	
+
 	@Autowired
 	public SimpMessagingTemplate messagingTemplatequeue;
-	
+
 	@GetMapping("/chats/{senderId}/{receiverId}")
-	public ResponseEntity<List<ChatMessage>> findChats(
-			@PathVariable("senderId") String senderId,
-			@PathVariable("receiverId") String receiverId
-			){
-		
+	public ResponseEntity<List<ChatMessage>> findChats(@PathVariable("senderId") String senderId,
+			@PathVariable("receiverId") String receiverId) {
+
 		return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
 	}
-	
+
 	@MessageMapping("/chat")
-	public void ProcessMessage(@Payload ChatMessage chatMessage) {
-		
-		chatMessage.setTimeStamp(DateTimeUtils.getCurrentDateTimeInIndia());
-		System.out.println("in controller");
-		ChatMessage	savedMessage=chatMessageService.save(chatMessage);
-		System.out.println("/users/rohan/queue/messages");
-		messagingTemplatequeue.convertAndSend("/users/"+chatMessage.getReceiverId()+"/queue/messages",
-				(Serializable) ChatNotification.builder()
-				.messageId(chatMessage.getChatMessageid())
-				.chatroomId(chatMessage.getChatroomId())
-				.senderId(chatMessage.getSenderId())
-				.receiverId(chatMessage.getReceiverId())
-				.content(chatMessage.getContent())
-				.build());
+	public BodyBuilder ProcessMessage(@Payload ChatMessage chatMessage) {
+
+		boolean success= chatMessageService.sendMessage(chatMessage);
+				
+		if(!success)return ResponseEntity.badRequest();
+				
+		return ResponseEntity.ok();
 	}
 }

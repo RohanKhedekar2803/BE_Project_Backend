@@ -9,7 +9,7 @@ import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Status;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,String>{
+public interface UserRepository extends JpaRepository<User, String> {
 
 	List<User> findAllByStatus(Status online);
 

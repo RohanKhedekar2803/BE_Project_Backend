@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RepositoryRequest {
-	
+
 	public String name;
 	public String description;
 	public String url;

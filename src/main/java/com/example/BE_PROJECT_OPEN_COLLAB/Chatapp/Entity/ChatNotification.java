@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatNotification implements Serializable{
+public class ChatNotification implements Serializable {
 	private Long messageId;
 	private String chatroomId;
 	private String senderId;

@@ -22,10 +22,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Repositor {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	public String name;
 	public String description;
 	public String url;

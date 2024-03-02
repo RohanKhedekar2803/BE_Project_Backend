@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
 
 @Repository
-public interface RepoRepository extends 
-PagingAndSortingRepository<Repositor, String>,CrudRepository<Repositor, String>{
+public interface RepoRepository
+		extends PagingAndSortingRepository<Repositor, String>, CrudRepository<Repositor, String> {
 
 	Repositor save(Repositor repo);
 

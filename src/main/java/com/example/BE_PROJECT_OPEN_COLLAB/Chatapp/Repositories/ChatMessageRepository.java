@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatRoom;
 
-public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>{
+public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long> {
 
-	 List<ChatMessage> findByChatroomId(String chatRoomId);
+	List<ChatMessage> findByChatroomId(String chatRoomId);
 
 }

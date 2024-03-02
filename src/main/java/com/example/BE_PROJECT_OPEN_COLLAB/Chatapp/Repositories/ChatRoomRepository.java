@@ -10,12 +10,10 @@ import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatRoom;
 
 @Repository
-public interface ChatRoomRepository extends CrudRepository<ChatRoom, String>{
+public interface ChatRoomRepository extends CrudRepository<ChatRoom, String> {
 
 	Optional<ChatRoom> findBySenderIdAndReceiverId(String senderId, String receiverId);
 
 	ChatMessage save(ChatMessage chatMessage);
-
-	
 
 }

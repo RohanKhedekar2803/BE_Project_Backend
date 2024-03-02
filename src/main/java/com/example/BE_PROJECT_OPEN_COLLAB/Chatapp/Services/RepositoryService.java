@@ -20,43 +20,41 @@ public class RepositoryService {
 
 	@Autowired
 	private RepoRepository repoRepository;
-	
+
 	public Repositor save(Repositor repo) {
 		System.out.println(repoRepository.save(repo));
 		try {
 			return repoRepository.save(repo);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
-	
-    public List<Repositor> getRepos(Integer pageNo, Integer pageSize, String sortBy, FilterRepos filterRepos) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Specification<Repositor> spec = Specification.where(null);
-        
-        if (!filterRepos.getHasLanguage().isEmpty()) {
 
-            spec = spec.and(withHasLanguage(filterRepos.getHasLanguage()));
-        }
-        else if (!filterRepos.getHasTopic().isEmpty()) {
+	public List<Repositor> getRepos(Integer pageNo, Integer pageSize, String sortBy, FilterRepos filterRepos) {
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Specification<Repositor> spec = Specification.where(null);
 
-            spec = spec.and(withTopicContaining(filterRepos.getHasTopic()));
-        }
+		if (!filterRepos.getHasLanguage().isEmpty()) {
 
+			spec = spec.and(withHasLanguage(filterRepos.getHasLanguage()));
+		} else if (!filterRepos.getHasTopic().isEmpty()) {
 
-        Page<Repositor> pagedResult = repoRepository.findAll(spec, paging);
+			spec = spec.and(withTopicContaining(filterRepos.getHasTopic()));
+		}
 
-        System.out.println("Data is --> " + pagedResult.getContent());
+		Page<Repositor> pagedResult = repoRepository.findAll(spec, paging);
 
-        return pagedResult.getContent();
-    }
-	
+		System.out.println("Data is --> " + pagedResult.getContent());
+
+		return pagedResult.getContent();
+	}
+
 	static Specification<Repositor> withHasLanguage(String hasLanguage) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), hasLanguage);
-    }
-	
+		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), hasLanguage);
+	}
+
 	static Specification<Repositor> withTopicContaining(String topic) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%'" + topic + "'%");
-    }
+		return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%'" + topic + "'%");
+	}
 
 }

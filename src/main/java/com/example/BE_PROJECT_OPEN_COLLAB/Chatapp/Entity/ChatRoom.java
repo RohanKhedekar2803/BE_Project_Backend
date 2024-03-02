@@ -15,7 +15,7 @@ import lombok.Setter;
 @Builder
 @Entity
 public class ChatRoom {
-	
+
 	@Id
 	public String chatroomId;
 	private String senderId;
