@@ -25,10 +25,10 @@ public class Challenges {
 		public String createdBy;
 		public String nameOfOrganization;
 		public String nameChallenge;
-		public String ProblemStatement;
+		public String problemStatement;
 		public String description;
-		public String Theme;
-		public String GithubUrl;
+		public String theme;
+		public String githubUrl;
 		public String createdAt;
 		public String language;
 		public String topics;
@@ -38,9 +38,9 @@ public class Challenges {
 		public boolean isBounty;
 		public boolean isHiring;
 		public boolean isSolo;
-		public Long MaxPeopleinTeam;
-		public Long MinPeopleinTeam;
-		public Long SalaryPerYear;
-		public Long Prize;
-		public List<String> RelatedLinks;
+		public Long maxPeopleinTeam;
+		public Long minPeopleinTeam;
+		public Long salaryPerYear;
+		public Long prize;
+		public List<String> relatedLinks;
 }
