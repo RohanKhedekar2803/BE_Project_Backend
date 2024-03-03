@@ -36,5 +36,5 @@ public class Repositor {
 	public Integer forks;
 	public String language;
 	public String topics;
-
+	
 }

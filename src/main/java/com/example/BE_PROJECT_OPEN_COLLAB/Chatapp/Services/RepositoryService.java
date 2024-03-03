@@ -68,6 +68,18 @@ public class RepositoryService {
 	static Specification<Repositor> withTopicContaining(String topic) {
 		return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%'" + topic + "'%");
 	}
+	
+	private List<List<String>> extractLanguagesAndTopics(List<Repositor> repositories) {
+        List<List<String>> documents = new ArrayList<>();
+        for (Repositor repository : repositories) {
+            List<String> repoData = new ArrayList<>();
+            // Add languages and topics from the repository to the document
+            repoData.add(repository.getLanguage());
+            repoData.add(repository.getTopics());
+            documents.add(repoData);
+        }
+        return documents;
+    }
 
 
 }
