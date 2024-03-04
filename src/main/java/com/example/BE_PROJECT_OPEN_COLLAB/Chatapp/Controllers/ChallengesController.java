@@ -84,5 +84,29 @@ public class ChallengesController {
         }
     }
     
+    //..............................................................................
+    
+    //get all challenges
+    @PostMapping("/getbyprofile/")
+    public ResponseEntity<List<Challenges>> retrieveChallengesByProfile(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestBody FilterRepos filterChallenges,
+            @RequestParam(defaultValue = "") String username
+            ) {
+    	
+    	//dummy data 
+    			String[] userLanguages = {"Java", "Python", "JavaScript"};
+    			String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+    			
+        List<Challenges> result = challengesService.getChallengesByProfile(pageNo, pageSize, sortBy, filterChallenges, userLanguages, userTopics, username);
 
+        if (result == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
 }

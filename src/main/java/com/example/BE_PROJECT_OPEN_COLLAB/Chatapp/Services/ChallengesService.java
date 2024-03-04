@@ -1,5 +1,6 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Challenges;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChallengesRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.Demo;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service
@@ -21,6 +23,9 @@ public class ChallengesService {
 
     @Autowired
     private ChallengesRepository challengesRepository;
+    
+    @Autowired
+    private Demo demo;
 
     public Challenges save(Challenges challenge) {
         return challengesRepository.save(challenge);
@@ -119,5 +124,106 @@ public class ChallengesService {
     public Challenges getChallengeById(Long id) {
         Optional<Challenges> optionalChallenge = challengesRepository.findById(id);
         return optionalChallenge.orElse(null);
+    }
+    
+    //......................................................................................
+    
+    //new ml model 
+    public List<Challenges> getChallengesByProfile(Integer pageNo, Integer pageSize, String sortBy, FilterRepos filterChallenges, String[] userLanguages, String[] userTopics, String username) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortBy));
+        Specification<Challenges> spec = Specification.where(null);
+
+        // Fetch all challenges from the database
+        List<Challenges> allChallenges = challengesRepository.findAll(spec);
+
+        // Apply filtering if provided
+        if (filterChallenges != null) {
+            String language = filterChallenges.getHasLanguage();
+            String topic = filterChallenges.getHasTopic();
+
+            // Remove leading and trailing whitespaces
+            if (language != null) {
+                language = language.trim();
+                if (!language.isEmpty()) {
+                    spec = spec.and(withHasLanguage(language));
+                }
+            }
+
+            // Remove leading and trailing whitespaces
+            if (topic != null) {
+                topic = topic.trim();
+                if (!topic.isEmpty()) {
+                    spec = spec.and(withTopicContaining(topic));
+                }
+            }
+        }
+
+        // Filter challenges based on the provided criteria
+        List<Challenges> filteredChallenges = challengesRepository.findAll(spec);
+
+        // Check if custom sorting is applied
+        if ("recommended".equals(sortBy)) {
+            System.out.println("in recommendation");
+            // Extract languages and topics from the fetched challenges
+            List<List<String>> documents = extractLanguagesAndTopics(allChallenges);
+
+            // Sort challenges using TF-IDF algorithm based on user languages and topics
+            List<Integer> sortedIndices = demo.sortRepositories(userLanguages, userTopics, documents);
+
+            // Map the sorted indices to the list of challenges
+            List<Challenges> sortedChallenges = new ArrayList<>();
+            for (int index : sortedIndices) {
+                sortedChallenges.add(allChallenges.get(index));
+            }
+
+            // Apply filtering on the custom sorted data
+            sortedChallenges = applyFiltering(sortedChallenges, filterChallenges);
+
+            // Perform pagination on the sorted and filtered challenges
+            return paginate(sortedChallenges, pageNo, pageSize);
+        } else {
+            System.out.println("not in recommendation");
+            // Perform pagination on the filtered challenges
+            return paginate(filteredChallenges, pageNo, pageSize);
+        }
+    }
+    
+    //helper for ml 
+    
+
+    private List<Challenges> paginate(List<Challenges> challenges, int pageNo, int pageSize) {
+        int start = pageNo * pageSize;
+        int end = Math.min(start + pageSize, challenges.size());
+        return challenges.subList(start, end);
+    }
+    
+    private List<Challenges> applyFiltering(List<Challenges> challenges, FilterRepos filterChallenges) {
+        List<Challenges> filteredChallenges = new ArrayList<>(challenges);
+        // Apply filtering logic here based on filterChallenges
+        // For example:
+        System.out.println(filterChallenges.getHasLanguage());
+        if (filterChallenges.getHasLanguage().length() > 0) {
+            System.out.println("in lang" + filteredChallenges.size());
+            filteredChallenges.removeIf(challenge -> challenge.getLanguage().equals(filterChallenges.getHasLanguage()));
+            System.out.println("in lang" + filteredChallenges.size());
+        } 
+        if (!filterChallenges.getHasTopic().isEmpty()) {
+            System.out.println("in topic" + filteredChallenges.size());
+            filteredChallenges.removeIf(challenge -> !challenge.getTopics().contains(filterChallenges.getHasTopic()));
+            System.out.println("in topic" + filteredChallenges.size());
+        }
+        return filteredChallenges;
+    }
+
+    private List<List<String>> extractLanguagesAndTopics(List<Challenges> challenges) {
+        List<List<String>> documents = new ArrayList<>();
+        for (Challenges challenge : challenges) {
+            List<String> challengeData = new ArrayList<>();
+            // Add languages and topics from the challenge to the document
+            challengeData.add(challenge.getLanguage());
+            challengeData.add(challenge.getTopics());
+            documents.add(challengeData);
+        }
+        return documents;
     }
 }

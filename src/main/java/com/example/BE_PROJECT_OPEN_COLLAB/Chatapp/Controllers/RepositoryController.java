@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +64,24 @@ public class RepositoryController {
 	public ResponseEntity<Repositor> getRepositoryById(@PathVariable("id") Long id) throws Exception{
 		Repositor repo =repositoryService.getRepoById(id);
 		return new ResponseEntity<Repositor>(repo,HttpStatus.OK);
+	}
+	
+	
+	//-------------------------------------------------------------------------------------
+	
+	@PostMapping("/getbyprofile/")
+	public Page<Repositor> retriveRepositoriesByProfile(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "recommended") String sortBy,
+			@RequestBody FilterRepos filterRepos,@RequestParam(defaultValue = "") String username) {
+
+		//dummy data 
+		String[] userLanguages = {"Java", "Python", "JavaScript"};
+		String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+		//
+		
+		Page<Repositor> result = repositoryService.getReposByProfile(pageNo, pageSize, sortBy, filterRepos, userLanguages, userTopics,username);
+
+		return result;
+
 	}
 }

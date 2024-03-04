@@ -24,5 +24,9 @@ public interface RepoRepository
 	Page findAll(Pageable paging);
 
 	Page<Repositor> findAll(Specification<Repositor> spec, Pageable paging);
+	
+	List<Repositor> findAll(Specification<Repositor> spec);
+	
+	List<Repositor> findAll();
 
 }

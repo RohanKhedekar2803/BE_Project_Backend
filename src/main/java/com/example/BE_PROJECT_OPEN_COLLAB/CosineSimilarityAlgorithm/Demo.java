@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class Demo {
 
-    public List<Integer> sortRepositories(String[] userLanguages, String[] userTopics) {
+    public List<Integer> sortRepositories(String[] userLanguages, String[] userTopics
+    		,List<List<String>> documents) {
         // Sample repository data
-        List<List<String>> documents = new ArrayList<>();
-        documents.add(Arrays.asList("JavaScript", "Java", "Machine Learning", "Artificial Intelligence", "Cloud", "Database", "SQL"));
-        documents.add(Arrays.asList("Python", "Machine Learning", "Deep Learning", "Cloud", "Database"));
-        documents.add(Arrays.asList("Java", "Cloud", "SQL", "Postgres"));
-        documents.add(Arrays.asList("Java", "SQL", "Postgres"));
+//        List<List<String>> documents = new ArrayList<>();
+//        documents.add(Arrays.asList("JavaScript", "Java", "Machine Learning", "Artificial Intelligence", "Cloud", "Database", "SQL"));
+//        documents.add(Arrays.asList("Python", "Machine Learning", "Deep Learning", "Cloud", "Database"));
+//        documents.add(Arrays.asList("Java", "Cloud", "SQL", "Postgres"));
+//        documents.add(Arrays.asList("Java", "SQL", "Postgres"));
         // Add more repositories as needed
 
         // Compute TF-IDF vectors for user's languages and topics

@@ -184,5 +184,30 @@ public class UserServices {
         }
         return (List<FavouriteTopic>) favouriteTopicsRepository.saveAll(favouriteTopics);
     }
+	
+	// fopr other files
+	public String[] getFavoriteTopicsByUsernameFromDb(String username) {
+	    Optional<User> user = userRepository.findById(username);
+	    if (user.isPresent() && user.get().getFavouriteTopic() != null) {
+	        List<String> favoriteTopics = new ArrayList<>();
+	        for (FavouriteTopic topic : user.get().getFavouriteTopic()) {
+	            favoriteTopics.add(topic.getTopicname());
+	        }
+	        return favoriteTopics.toArray(new String[favoriteTopics.size()]);
+	    }
+	    return new String[0];
+	}
+
+	public String[] getFavoriteLanguagesByUsernameFromDb(String username) {
+	    Optional<User> user = userRepository.findById(username);
+	    if (user.isPresent() && user.get().getFavouriteLanguages() != null) {
+	        List<String> favoriteLanguages = new ArrayList<>();
+	        for (FavouriteLanguage language : user.get().getFavouriteLanguages()) {
+	            favoriteLanguages.add(language.getLanguageName());
+	        }
+	        return favoriteLanguages.toArray(new String[favoriteLanguages.size()]);
+	    }
+	    return new String[0];
+	}
 
 }
