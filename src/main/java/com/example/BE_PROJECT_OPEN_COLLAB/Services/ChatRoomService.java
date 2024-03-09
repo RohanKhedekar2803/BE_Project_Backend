@@ -1,12 +1,12 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
+package com.example.BE_PROJECT_OPEN_COLLAB.Services;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatRoom;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatRoomRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatRoom;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChatRoomRepository;
 
 @Service
 public class ChatRoomService {

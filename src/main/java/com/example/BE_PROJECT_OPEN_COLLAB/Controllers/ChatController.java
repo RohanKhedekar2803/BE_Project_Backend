@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+package com.example.BE_PROJECT_OPEN_COLLAB.Controllers;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.ChatMessageService;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatMessage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatNotification;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.ChatMessageService;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 
 @CrossOrigin(origins = "http://localhost:3000")

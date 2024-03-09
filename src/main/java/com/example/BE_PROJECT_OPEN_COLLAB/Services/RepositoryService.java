@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
+package com.example.BE_PROJECT_OPEN_COLLAB.Services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,15 +17,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteLanguage;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteTopic;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteLanguagesRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteTopicsRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.UserRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteLanguage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteTopic;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.FavouriteLanguagesRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.FavouriteTopicsRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.RepoRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.UserRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service

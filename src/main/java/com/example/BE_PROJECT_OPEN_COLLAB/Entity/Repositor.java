@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity;
+package com.example.BE_PROJECT_OPEN_COLLAB.Entity;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;

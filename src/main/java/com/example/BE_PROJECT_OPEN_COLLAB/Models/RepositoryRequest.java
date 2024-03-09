@@ -2,7 +2,7 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Models;
 
 import java.time.LocalDateTime;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

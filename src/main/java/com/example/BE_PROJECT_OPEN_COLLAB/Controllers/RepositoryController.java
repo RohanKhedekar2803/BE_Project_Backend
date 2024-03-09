@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+package com.example.BE_PROJECT_OPEN_COLLAB.Controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.RepositoryService;
+
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
 import com.example.BE_PROJECT_OPEN_COLLAB.Models.*;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.RepositoryService;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 

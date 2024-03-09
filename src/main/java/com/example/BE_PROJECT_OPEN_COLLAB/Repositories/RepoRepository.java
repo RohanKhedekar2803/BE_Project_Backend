@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories;
+package com.example.BE_PROJECT_OPEN_COLLAB.Repositories;
 
 import java.util.ArrayList;
 
@@ -9,8 +9,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteTopic;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteTopic;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
+
 import java.util.List;
 
 

@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
+package com.example.BE_PROJECT_OPEN_COLLAB.Services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Challenges;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChallengesRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Challenges;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChallengesRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service

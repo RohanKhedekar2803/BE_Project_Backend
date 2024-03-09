@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
+package com.example.BE_PROJECT_OPEN_COLLAB.Services;
 
 import java.io.Serializable;
 
@@ -7,10 +7,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatMessageRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatRoomRepository;
+
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatMessage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatNotification;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChatMessageRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChatRoomRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 
 @Service

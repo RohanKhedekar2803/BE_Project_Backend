@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+package com.example.BE_PROJECT_OPEN_COLLAB.Controllers;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Challenges;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.ChallengesService;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Challenges;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.ChallengesService;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @RestController

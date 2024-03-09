@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+package com.example.BE_PROJECT_OPEN_COLLAB.Controllers;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatMessage;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.ChatNotification;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChatMessageRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.UserServices;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatMessage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatNotification;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChatMessageRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.UserServices;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.DateTimeUtils;
 
 import java.text.SimpleDateFormat;

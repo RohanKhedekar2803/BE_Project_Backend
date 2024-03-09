@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Controllers;
+package com.example.BE_PROJECT_OPEN_COLLAB.Controllers;
 
 import java.net.http.HttpResponse;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services.UserServices;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.UserServices;
 
 @RestController
 @RequestMapping("/user")

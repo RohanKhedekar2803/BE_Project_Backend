@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.RepoRepository;
 
 public class DateTimeUtils {
 
