@@ -91,7 +91,7 @@ public class ChallengesController {
     public ResponseEntity<List<Challenges>> retrieveChallengesByProfile(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "recommended") String sortBy,
             @RequestBody FilterRepos filterChallenges,
             @RequestParam(defaultValue = "") String username
             ) {
