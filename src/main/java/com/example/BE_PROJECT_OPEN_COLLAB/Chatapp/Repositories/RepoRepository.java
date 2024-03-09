@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteTopic;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
 import java.util.List;
 
@@ -28,5 +29,6 @@ public interface RepoRepository
 	List<Repositor> findAll(Specification<Repositor> spec);
 	
 	List<Repositor> findAll();
+
 
 }

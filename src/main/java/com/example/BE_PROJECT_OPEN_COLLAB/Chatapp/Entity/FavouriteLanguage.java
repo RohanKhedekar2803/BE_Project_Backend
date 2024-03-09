@@ -24,4 +24,8 @@ public class FavouriteLanguage {
     private Long id;
 	private String LanguageName;
 	
+	@ManyToOne
+	@JoinColumn(name = "username")
+	private User user;
+	
 }

@@ -1,7 +1,10 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteLanguage;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.FavouriteTopic;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Repositor;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteLanguagesRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteTopicsRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.UserRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.Demo;
@@ -27,11 +35,23 @@ public class RepositoryService {
 	private RepoRepository repoRepository;
 	
 	@Autowired
+	private FavouriteLanguagesRepository favouriteLanguagesRepository;
+	
+	@Autowired
+	private FavouriteTopicsRepository favouriteTopicsRepository;
+	
+	
+	
+	@Autowired
 	private UserServices userServices;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private Demo demo;
 
+	//save 1 repo
 	public Repositor save(Repositor repo) {
 		System.out.println(repoRepository.save(repo));
 		try {
@@ -40,7 +60,8 @@ public class RepositoryService {
 			return null;
 		}
 	}
-
+	
+	//retrive all repos
 	public List<Repositor> getRepos(Integer pageNo, Integer pageSize, String sortBy, FilterRepos filterRepos) {
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Specification<Repositor> spec = Specification.where(null);
@@ -60,6 +81,7 @@ public class RepositoryService {
 		return pagedResult.getContent();
 	}
 	
+	//get repo by id
 	public Repositor getRepoById(Long id) throws Exception{
 		
 			Repositor repository =repoRepository.findById(id);
@@ -69,6 +91,8 @@ public class RepositoryService {
 			return repository;	
 	}
 
+	
+	//helper methods
 	static Specification<Repositor> withHasLanguage(String hasLanguage) {
 		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), hasLanguage);
 	}
@@ -79,30 +103,21 @@ public class RepositoryService {
 	
 	
 	
-	//--------------------------------------------------------------------------------------
+	//NOTE- ALL SERVICES BELOW THIS ARE FOR EXACT MATCHING which is not used by default
 	
-	/* http://{server}:{port}/repo/getbyprofile/
-	 * http://{server}:{port}/repo/getbyprofile/?username=pranitk7&pageNo=0&pageSize=5&sortBy=SalaryPerYear
-	 * by default based on users profile repos are served and sorting & filtering fdrom that recomended only
-	 * if sorting is provided by user then use that 
-	 * 
-	 * case 1 
-	 * */
+
 	
-	
+	//only for exact matching which is not used by default 
 	public Page<Repositor> getReposByProfile(Integer pageNo, Integer pageSize, String sortBy, FilterRepos filterRepos, String[] userLanguages, String[] userTopics, String username) {
 	    Pageable paging;
 	    
-	    //get users languages and topics
-	    if(!username.equals("")) {
-	         userLanguages =userServices.getFavoriteLanguagesByUsernameFromDb(username);
-	         userTopics =userServices.getFavoriteTopicsByUsernameFromDb(username);
-	    }
-
-	    System.out.println(username.length() + userTopics.length + "size of interests");
+	     if(username.equals("") || username==null) {
+	    	 throw new CustomException(username+" not found");
+	     }
+	     
+	     userLanguages =userServices.getFavoriteLanguagesByUsernameFromDb(username);
+	     userTopics =userServices.getFavoriteTopicsByUsernameFromDb(username);
 	    
-	    // Fetch all repositories from the database
-	    List<Repositor> allRepositories = repoRepository.findAll();
 
 	    // Apply filtering if provided
 	    Specification<Repositor> spec = Specification.where(null);
@@ -111,15 +126,19 @@ public class RepositoryService {
 	    } else if (!filterRepos.getHasTopic().isEmpty()) {
 	        spec = spec.and(withTopicContaining(filterRepos.getHasTopic()));
 	    }
-
-	    // Filter repositories based on the provided criteria
+	    
 	    List<Repositor> filteredRepositories = repoRepository.findAll(spec);
-
-	    // Check if custom sorting is applied
+	    
+	 // Check if custom sorting is applied
 	    if ("recommended".equals(sortBy)) {
+	    	
 	        System.out.println("in recommendation");
 	        // Extract languages and topics from the fetched repositories
-	        List<List<String>> documents = extractLanguagesAndTopics(allRepositories);
+	        List<List<String>> documents = new ArrayList<>();
+	        
+	        for(Repositor repository : filteredRepositories) {
+	        	documents.add(getRepositoryTechnologies(repository));
+	        }
 
 	        // Sort repositories using TF-IDF algorithm based on user languages and topics
 	        List<Integer> sortedIndices = demo.sortRepositories(userLanguages, userTopics, documents);
@@ -127,11 +146,9 @@ public class RepositoryService {
 	        // Map the sorted indices to the paged result
 	        List<Repositor> sortedRepositories = new ArrayList<>();
 	        for (int index : sortedIndices) {
-	            sortedRepositories.add(allRepositories.get(index));
+	            sortedRepositories.add(filteredRepositories.get(index));
 	        }
 
-	        // Apply filtering on the custom sorted data
-	        sortedRepositories = applyFiltering(sortedRepositories, filterRepos);
 
 	        // Create a new page with the sorted and filtered repositories
 	        return paginate(sortedRepositories, pageNo, pageSize);
@@ -154,35 +171,104 @@ public class RepositoryService {
 	    return new PageImpl<>(pageContent, PageRequest.of(pageNo, pageSize), repositories.size());
 	}
 
-	private List<Repositor> applyFiltering(List<Repositor> repositories, FilterRepos filterRepos) {
-	    List<Repositor> filteredRepositories = new ArrayList<>(repositories);
-	    // Apply filtering logic here based on filterRepos
-	    // For example:
-	    System.out.println(filterRepos.getHasLanguage());
-	    if (filterRepos.getHasLanguage().length() > 0) {
-	    	System.out.println("in lang" + filteredRepositories.size());
-	        filteredRepositories.removeIf(repo -> repo.getLanguage().equals(filterRepos.getHasLanguage()));
-	        System.out.println("in lang" + filteredRepositories.size());
-	    } 
-	    if (!filterRepos.getHasTopic().isEmpty()) {
-	    	System.out.println("in topic" + filteredRepositories.size());
-	        filteredRepositories.removeIf(repo -> !repo.getTopics().contains(filterRepos.getHasTopic()));
-	        System.out.println("in topic" + filteredRepositories.size());
-	    }
-	    return filteredRepositories;
-	}
 	
-	private List<List<String>> extractLanguagesAndTopics(List<Repositor> repositories) {
-        List<List<String>> documents = new ArrayList<>();
-        for (Repositor repository : repositories) {
-            List<String> repoData = new ArrayList<>();
-            // Add languages and topics from the repository to the document
-            repoData.add(repository.getLanguage());
-            repoData.add(repository.getTopics());
-            documents.add(repoData);
-        }
-        return documents;
+	public static String[] convertToArray(String input) {
+        // Remove square brackets, single quotes, and leading/trailing spaces
+        String cleanInput = input.replaceAll("\\[|\\]|'|\\s", "");
+
+        // Split the cleaned input by comma and optional whitespace
+        String[] resultArray = cleanInput.split(",\\s*");
+
+        return resultArray;
     }
+	
+	//exact matching 
+	public List<Repositor> recommendRepositories(String username) {
 
+	    Optional<User> useroptional = userRepository.findById(username);
+	    if (useroptional.isEmpty()) {
+	        throw new CustomException(username + " not found!");
+	    }
+	    User user = useroptional.get();
 
+	    // Fetch all repositories from the database
+	    List<Repositor> allRepositories = repoRepository.findAll();
+
+	    // Use a HashMap to store scores, as Repositor doesn't have a score field
+	    Map<Repositor, Integer> scores = new HashMap<>();
+
+	    // Filter and rank repositories
+	    List<Repositor> recommendedRepositories = new ArrayList<>();
+	    List<String> UserTechnologies=getUserTechnologies(user);
+	    for (Repositor repository : allRepositories) {
+	        int matchingTechnologies = 0;
+	        
+	       // System.out.println(UserTechnologies);
+	        for (String userTechnologiesarrayofOneUserRepo : UserTechnologies) {
+	        	List<String> RepoTechnologies =getRepositoryTechnologies(repository);
+	            if (RepoTechnologies.contains(userTechnologiesarrayofOneUserRepo)) {	
+	            	matchingTechnologies++;
+	            }
+	        	
+	        }
+	        if (matchingTechnologies > 0) { // Add only if there's a match
+	            scores.put(repository, matchingTechnologies); // Store scores in HashMap
+	            recommendedRepositories.add(repository);
+	        }
+	    }
+	    
+	   
+//	     Sort repositories based on their scores in the HashMap
+	    recommendedRepositories.sort((r1, r2) -> scores.get(r2) - scores.get(r1)); // Use scores from HashMap for sorting
+	    
+	    return recommendedRepositories;
+
+	}
+	ArrayList<String> getUserTechnologies(User user){
+		
+		ArrayList<String> list=new ArrayList<>();
+		for(FavouriteLanguage ele : favouriteLanguagesRepository.findAllByUser(user)) {
+			list.add(ele.getLanguageName());
+		}
+		
+		//issue here
+		for(FavouriteTopic ele : user.getFavouriteTopic()) {
+				list.add(ele.getTopicname());
+		}
+		
+		return list;
+		
+	}
+
+	ArrayList<String> getRepositoryTechnologies(Repositor repository){
+
+		ArrayList<String> list=new ArrayList<>();
+		
+		list.add("'" + repository.getLanguage() + "'");
+		List<String>al=stringToList(repository.getTopics());
+		for(String it : al) {
+			list.add(it);
+		}
+		return (ArrayList<String>)list;
+		
+	}
+	 //"[ 'abc' , 'cv' , 'er' ]" -->[abc,cv,er]
+	public List<String> stringToList(String string) {
+        // Remove leading and trailing square brackets and quotes
+        String cleanString = string.replaceAll("^\"|\"$", "").replaceAll("^\\[|\\]$", "");
+//        
+        // Split the string by commas, handling potential spaces around commas
+        
+        String[] splitArray = cleanString.split(",");
+        
+        List<String> stringList = new ArrayList<>();
+        for (String element : splitArray) {
+            stringList.add(element); // Remove quotes after splitting
+        }
+//        System.out.println(stringList);
+        // Return the list of strings
+        return stringList;
+    }
+	
+	
 }

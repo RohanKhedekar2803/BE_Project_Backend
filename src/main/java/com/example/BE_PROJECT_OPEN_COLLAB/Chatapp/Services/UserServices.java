@@ -141,7 +141,7 @@ public class UserServices {
 	        JsonNode reposJson = restTemplate.getForObject(reposUrl, JsonNode.class);
 	        System.out.println(reposJson+ "random");
 	       
-	        // Iterate through repositories and extract languages
+	        // Iterate through repositories and extract topics generalyy absent
 	        List<String> topics = new ArrayList<>();
 	        for (JsonNode repo : reposJson) {
 	            String topic = repo.get("topics").asText();
@@ -169,7 +169,7 @@ public class UserServices {
         List<FavouriteLanguage> favouriteLanguages = new ArrayList<>();
         for (String language : languages) {
             FavouriteLanguage favouriteLanguage = new FavouriteLanguage();
-            favouriteLanguage.setLanguageName(language);
+            favouriteLanguage.setLanguageName("'"+language + "'");
             favouriteLanguages.add(favouriteLanguage);
         }
         return (List<FavouriteLanguage>) favouriteLanguagesRepository.saveAll(favouriteLanguages);
@@ -206,6 +206,9 @@ public class UserServices {
 	            favoriteLanguages.add(language.getLanguageName());
 	        }
 	        return favoriteLanguages.toArray(new String[favoriteLanguages.size()]);
+	    }
+	    if(user.isEmpty()) {
+	    	throw new CustomException(username + "doent exists in db ");
 	    }
 	    return new String[0];
 	}

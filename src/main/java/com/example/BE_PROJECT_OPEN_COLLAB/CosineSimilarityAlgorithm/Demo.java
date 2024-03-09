@@ -1,5 +1,7 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,90 +15,89 @@ import org.springframework.stereotype.Service;
 @Service
 public class Demo {
 
-    public List<Integer> sortRepositories(String[] userLanguages, String[] userTopics
-    		,List<List<String>> documents) {
-        // Sample repository data
-//        List<List<String>> documents = new ArrayList<>();
-//        documents.add(Arrays.asList("JavaScript", "Java", "Machine Learning", "Artificial Intelligence", "Cloud", "Database", "SQL"));
-//        documents.add(Arrays.asList("Python", "Machine Learning", "Deep Learning", "Cloud", "Database"));
-//        documents.add(Arrays.asList("Java", "Cloud", "SQL", "Postgres"));
-//        documents.add(Arrays.asList("Java", "SQL", "Postgres"));
-        // Add more repositories as needed
+	private static final String LOG_FILE_PATH = "repository_logs.txt";
 
-        // Compute TF-IDF vectors for user's languages and topics
-        List<String> userDocuments = new ArrayList<>(Arrays.asList(userLanguages));
-        userDocuments.addAll(Arrays.asList(userTopics));
-        Map<String, Double> idfValues = new HashMap<>();
-        List<Map<String, Double>> tfidfVectors = new ArrayList<>();
-        computeTFIDFVectors(documents, idfValues, tfidfVectors);
 
-        List<Integer> repositoryIndices = new ArrayList<>();
-        for (int i = 0; i < documents.size(); i++) {
-            repositoryIndices.add(i);
-        }
-        repositoryIndices.sort((repo1, repo2) -> {
-            Map<String, Double> tfidfVector1 = tfidfVectors.get(repo1);
-            Map<String, Double> tfidfVector2 = tfidfVectors.get(repo2);
-            double sum1 = calculateSum(tfidfVector1, userDocuments);
-            double sum2 = calculateSum(tfidfVector2, userDocuments);
-            return Double.compare(sum2, sum1); // Sort in descending order of TF-IDF sums
-        });
+	private static final String LOG_FILE_PATH_COSINE_SIMILARITY = "repository_logs.txt";
 
-        // Print repositories in sorted order
-        System.out.println("Repositories in Sorted Order:");
-        for (int index : repositoryIndices) {
-            System.out.println("Repository " + (index + 1) + ": " + documents.get(index));
-            System.out.println("TF-IDF Vector: " + tfidfVectors.get(index));
-        }
+	public List<Integer> sortRepositories(String[] userLanguages, String[] userTopics,
+			List<List<String>> repoDocuments) {
+		List<String> userDocuments = new ArrayList<>();
 
-        return repositoryIndices;
-    }
+// Add user topics and languages to user documents
+		userDocuments.addAll(Arrays.asList(userTopics));
+		userDocuments.addAll(Arrays.asList(userLanguages));
 
-    private double calculateSum(Map<String, Double> tfidfVector, List<String> userDocuments) {
-        double sum = 0.0;
-        for (String term : userDocuments) {
-            sum += tfidfVector.getOrDefault(term, 0.0);
-        }
-        return sum;
-    }
+		List<Integer> repositoryIndices = new ArrayList<>();
+		for (int i = 0; i < repoDocuments.size(); i++) {
+			repositoryIndices.add(i);
+		}
 
-    private void computeTFIDFVectors(List<List<String>> documents, Map<String, Double> idfValues, List<Map<String, Double>> tfidfVectors) {
-        int totalDocuments = documents.size();
+		try (FileWriter writer = new FileWriter(LOG_FILE_PATH, false)) {
+			writer.write("Repositories in Sorted Order:\n");
+			writer.write("User data: " + Arrays.toString(userLanguages) + " " + Arrays.toString(userTopics) + "\n\n");
 
-        // Count document frequency for each term
-        Map<String, Integer> documentFrequency = new HashMap<>();
-        for (List<String> document : documents) {
-            Set<String> uniqueTerms = new HashSet<>(document);
-            for (String term : uniqueTerms) {
-                documentFrequency.put(term, documentFrequency.getOrDefault(term, 0) + 1);
-            }
-        }
+			repositoryIndices.sort((repo1, repo2) -> {
+				double similarity1 = computeCosineSimilarity(repoDocuments.get(repo1), userDocuments);
+				double similarity2 = computeCosineSimilarity(repoDocuments.get(repo2), userDocuments);
 
-        // Compute IDF values
-        for (String term : documentFrequency.keySet()) {
-            double idf = Math.log((double) totalDocuments / (double) (1 + documentFrequency.get(term))) + 1; // Add 1 to ensure non-zero value
-            idfValues.put(term, idf);
-        }
+				return Double.compare(similarity2, similarity1); // Sort in descending order of cosine similarity
+			});
 
-        // Compute TF-IDF vectors for each document
-        for (List<String> document : documents) {
-            Map<String, Double> tfidfVector = new HashMap<>();
-            Map<String, Integer> termFrequency = new HashMap<>();
-            int totalTermsInDocument = document.size();
+			// Write repositories in sorted order to a log file
+			Set<Integer> printedIndices = new HashSet<>();
+			for (int index : repositoryIndices) {
+				if (printedIndices.add(index)) {
+					writer.write("Repository ID: " + index + "\n");
+					writer.write("Similarity with user: "
+							+ computeCosineSimilarity(repoDocuments.get(index), userDocuments) + "\n");
+					writer.write("repository is"+ repoDocuments.get(index));
+				}
+			}
 
-            // Count term frequency for each term in the document
-            for (String term : document) {
-                termFrequency.put(term, termFrequency.getOrDefault(term, 0) + 1);
-            }
+		} catch (IOException e) {
+			System.err.println("Failed to write logs to file: " + e.getMessage());
+		}
 
-            // Compute TF-IDF values for each term
-            for (String term : termFrequency.keySet()) {
-                double tf = (double) termFrequency.get(term) / (double) totalTermsInDocument;
-                double tfidf = tf * idfValues.get(term);
-                tfidfVector.put(term, tfidf);
-            }
+		return repositoryIndices;
+	}
 
-            tfidfVectors.add(tfidfVector);
-        }
-    }
+	private double computeCosineSimilarity(List<String> document1, List<String> document2) {
+		Map<String, Integer> tf1 = computeTermFrequency(document1);
+		Map<String, Integer> tf2 = computeTermFrequency(document2);
+
+		double dotProduct = 0.0;
+		double magnitude1 = 0.0;
+		double magnitude2 = 0.0;
+
+		Set<String> vocabulary = new HashSet<>(tf1.keySet());
+		vocabulary.addAll(tf2.keySet());
+
+		for (String term : vocabulary) {
+			int tfValue1 = tf1.getOrDefault(term, 0);
+			int tfValue2 = tf2.getOrDefault(term, 0);
+
+			dotProduct += tfValue1 * tfValue2;
+			magnitude1 += tfValue1 * tfValue1;
+			magnitude2 += tfValue2 * tfValue2;
+		}
+
+		magnitude1 = Math.sqrt(magnitude1);
+		magnitude2 = Math.sqrt(magnitude2);
+
+		if (magnitude1 == 0.0 || magnitude2 == 0.0) {
+			return 0.0; // Prevent division by zero
+		}
+
+		return dotProduct / (magnitude1 * magnitude2);
+	}
+
+	private Map<String, Integer> computeTermFrequency(List<String> document) {
+		Map<String, Integer> termFrequency = new HashMap<>();
+		for (String term : document) {
+			termFrequency.put(term, termFrequency.getOrDefault(term, 0) + 1);
+		}
+		return termFrequency;
+	}
+
 }

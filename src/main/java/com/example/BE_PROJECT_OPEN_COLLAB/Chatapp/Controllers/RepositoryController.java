@@ -24,10 +24,6 @@ public class RepositoryController {
 	@Autowired
 	private RepositoryService repositoryService;
 
-	@GetMapping("/hi")
-	public String greet() {
-		return "heyyy";
-	}
     //while sending data from fronend for topics send in "topics": "['aws', 'aws-sdk', 'go']", thsi format othrwqise filter wont work
 	@PostMapping("/save")
 	public ResponseEntity<Repositor> addRepository(@RequestBody RepositoryRequest repo) {
@@ -69,6 +65,9 @@ public class RepositoryController {
 	
 	//-------------------------------------------------------------------------------------
 	
+	//NOTES- for filtering only 1 filter to be applied at a time either has topics or has language give
+	// input space for user to enter any string and boolean to determine if want to sort by topic or lang 
+	//NOTE- for sorting only 4 feilds must be allowed at frontend 
 	@PostMapping("/getbyprofile/")
 	public Page<Repositor> retriveRepositoriesByProfile(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "recommended") String sortBy,
@@ -81,6 +80,23 @@ public class RepositoryController {
 		
 		Page<Repositor> result = repositoryService.getReposByProfile(pageNo, pageSize, sortBy, filterRepos, userLanguages, userTopics,username);
 
+		return result;
+
+	}
+	
+	//NOTE-exact matching NOT USED BY DEFAULT DONT MAKE FRONTEND CALL FROM IT 
+	@PostMapping("/getbyprofilebyExactMatching/")
+	public List<Repositor> retriveRepositoriesByProfileByBard(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "recommended") String sortBy,
+			@RequestBody FilterRepos filterRepos,@RequestParam(defaultValue = "") String username) {
+
+		//dummy data 
+		String[] userLanguages = {"Java", "Python", "JavaScript"};
+		String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+		//
+		
+		
+		List<Repositor> result = repositoryService.recommendRepositories(username);
 		return result;
 
 	}

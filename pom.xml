@@ -26,14 +26,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency> 
-		
+	!-->	
 		<dependency>
 	      <groupId>org.springframework.boot</groupId>
 	      <artifactId>spring-boot-starter-websocket</artifactId>
@@ -75,6 +75,19 @@
     <artifactId>commons-text</artifactId>
     <version>1.10.0</version>
 </dependency>
+
+<dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>3.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.12</artifactId>
+            <version>3.3.3</version>
+            <scope>provided</scope>
+        </dependency>
 
 
 
