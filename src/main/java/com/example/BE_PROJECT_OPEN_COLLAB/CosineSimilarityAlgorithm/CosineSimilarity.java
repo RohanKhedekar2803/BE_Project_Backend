@@ -13,18 +13,18 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Demo {
+public class CosineSimilarity {
 
-	private static final String LOG_FILE_PATH = "repository_logs.txt";
+	private final String LOG_FILE_PATH = "repository_logs.txt";
 
 
 	private static final String LOG_FILE_PATH_COSINE_SIMILARITY = "repository_logs.txt";
 
-	public List<Integer> sortRepositories(String[] userLanguages, String[] userTopics,
+	public List<Integer> sortRepositoriesByCosineSimilarity(String[] userLanguages, String[] userTopics,
 			List<List<String>> repoDocuments) {
 		List<String> userDocuments = new ArrayList<>();
 
-// Add user topics and languages to user documents
+		// Add user topics and languages to user documents
 		userDocuments.addAll(Arrays.asList(userTopics));
 		userDocuments.addAll(Arrays.asList(userLanguages));
 

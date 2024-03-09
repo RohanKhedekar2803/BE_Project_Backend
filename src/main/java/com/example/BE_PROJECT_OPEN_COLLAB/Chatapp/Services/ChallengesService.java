@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.Challenges;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.ChallengesRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.Demo;
+import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service
@@ -25,7 +25,7 @@ public class ChallengesService {
     private ChallengesRepository challengesRepository;
     
     @Autowired
-    private Demo demo;
+    private CosineSimilarity demo;
 
     public Challenges save(Challenges challenge) {
         return challengesRepository.save(challenge);
@@ -168,7 +168,7 @@ public class ChallengesService {
             List<List<String>> documents = extractLanguagesAndTopics(allChallenges);
 
             // Sort challenges using TF-IDF algorithm based on user languages and topics
-            List<Integer> sortedIndices = demo.sortRepositories(userLanguages, userTopics, documents);
+            List<Integer> sortedIndices = demo.sortRepositoriesByCosineSimilarity(userLanguages, userTopics, documents);
 
             // Map the sorted indices to the list of challenges
             List<Challenges> sortedChallenges = new ArrayList<>();

@@ -3,7 +3,7 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Status;
+import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.Status;
 
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.CascadeType;

@@ -1,4 +1,4 @@
-package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp;
+package com.example.BE_PROJECT_OPEN_COLLAB.Configurations;
 
 import java.util.List;
 

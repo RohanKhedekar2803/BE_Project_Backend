@@ -3,7 +3,7 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Status;
+import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.Status;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

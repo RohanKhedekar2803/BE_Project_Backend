@@ -25,7 +25,7 @@ import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteLanguage
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.FavouriteTopicsRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.RepoRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Repositories.UserRepository;
-import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.Demo;
+import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
 @Service
@@ -49,7 +49,7 @@ public class RepositoryService {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private Demo demo;
+	private CosineSimilarity demo;
 
 	//save 1 repo
 	public Repositor save(Repositor repo) {
@@ -141,7 +141,7 @@ public class RepositoryService {
 	        }
 
 	        // Sort repositories using TF-IDF algorithm based on user languages and topics
-	        List<Integer> sortedIndices = demo.sortRepositories(userLanguages, userTopics, documents);
+	        List<Integer> sortedIndices = demo.sortRepositoriesByCosineSimilarity(userLanguages, userTopics, documents);
 
 	        // Map the sorted indices to the paged result
 	        List<Repositor> sortedRepositories = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Utilities;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Status;
 import com.example.BE_PROJECT_OPEN_COLLAB.Chatapp.Entity.User;
 
 import lombok.AllArgsConstructor;
