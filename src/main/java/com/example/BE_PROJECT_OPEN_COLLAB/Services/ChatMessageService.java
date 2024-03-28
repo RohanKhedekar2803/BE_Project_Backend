@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatMessage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatNotification;
 import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChatMessageRepository;
@@ -56,7 +57,7 @@ public class ChatMessageService {
 			
 				status=true;
 			}catch (Exception e) {
-				System.out.println("exception in msg sednign but itgs handled");
+				throw new CustomException("message no sent");
 			}
 			return status;
 			
