@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  server:
+    build: .
+    restart: always
+    ports: 
+      - 9005:9005
+    depends_on :
+      - mysqldb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/opencollab
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Rohan@2803
+      
+  mysqldb:
+    image: "mysql:8.0.34"
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: opencollab
+      MYSQL_ROOT_PASSWORD: Rohan@2803
