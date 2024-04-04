@@ -226,4 +226,9 @@ public class ChallengesService {
         }
         return documents;
     }
+
+	public List<Challenges> getChallengescreatedBy(String username) {
+		List<Challenges> list =challengesRepository.findByCreatedBy(username);
+		return list;
+	}
 }

@@ -21,6 +21,8 @@ PagingAndSortingRepository<Challenges, Long>,CrudRepository<Challenges, Long>{
 	Page<Challenges> findAll(Specification<Challenges> spec, Pageable pageable);
 	
 	List<Challenges> findAll(Specification<Challenges> spec);
+
+	List<Challenges> findByCreatedBy(String username);
 	
 	
 }

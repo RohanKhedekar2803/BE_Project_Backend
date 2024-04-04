@@ -2,14 +2,9 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Services;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +16,7 @@ import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteLanguage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteTopic;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
+import com.example.BE_PROJECT_OPEN_COLLAB.Models.UserResponse;
 import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.FavouriteLanguagesRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.FavouriteTopicsRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.UserRepository;
@@ -43,7 +39,7 @@ public class UserServices {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public User saveUser(User newUser) throws CustomException{
+	public UserResponse saveUser(User newUser) throws CustomException{
 		
 		
 			Optional<User> checkUser=userRepository.findById(newUser.getUsername());
@@ -55,6 +51,7 @@ public class UserServices {
 			User user = User.builder()
 					.status(Status.Online)
 					.password(newUser.getPassword())
+					.nickname(newUser.getNickname())
 					.username(newUser.getUsername())
 					.isOrganization(newUser.getIsOrganization())
 					.build();
@@ -71,7 +68,10 @@ public class UserServices {
 			user.setFavouriteTopic(topicList);
 			
 			User saveduser = userRepository.save(user);
-			return saveduser;
+			
+			return UserResponse.builder().username(user.getUsername()).nickname(user.getNickname()).
+					isOrganization(user.getIsOrganization()).favouriteLanguages(user.getFavouriteLanguages()).
+					favouriteTopic(user.getFavouriteTopic()).build();
 		
 	}
 
@@ -87,18 +87,22 @@ public class UserServices {
 		return userRepository.findAllByStatus(Status.Online);
 	}
 	
-	public User verifyUsernameAndPassword(String Username, String Password){
-		
+	public UserResponse verifyUsernameAndPassword(String Username, String Password){
+
 		Optional<User> checkUser=userRepository.findById(Username);
 		if(checkUser.isEmpty()) {
-			System.out.println("already there");
+
 			throw new CustomException("username is not valid");
-		}else {
+		}
 			if(!checkUser.get().getPassword().equals(Password)) {
 				throw new CustomException("username & password do not match");
 			}
-		}
-		return checkUser.get();
+			User user= userRepository.findByUsername(Username);
+			
+			return UserResponse.builder().username(user.getUsername()).nickname(user.getNickname()).
+					isOrganization(user.getIsOrganization()).favouriteLanguages(user.getFavouriteLanguages()).
+					favouriteTopic(user.getFavouriteTopic()).build();
+		
 	}
 	//helper for services 
 	public List<String> getLanguagesUsedByUser(String username) {
@@ -211,6 +215,29 @@ public class UserServices {
 	    	throw new CustomException(username + "doent exists in db ");
 	    }
 	    return new String[0];
+	}
+
+	
+	public UserResponse getUserByUsername(String username) {
+	    User user=userRepository.findByUsername(username);
+//		if(user == null) {
+//
+//			throw new CustomException("username is not valid");
+//		}
+		return UserResponse.builder().username(user.getUsername()).nickname(user.getNickname()).
+				isOrganization(user.getIsOrganization()).favouriteLanguages(user.getFavouriteLanguages()).
+				favouriteTopic(user.getFavouriteTopic()).build();
+	
+	/**/
+	
+	}
+	public List<FavouriteLanguage> getlanguage() {
+		return (List<FavouriteLanguage>) favouriteLanguagesRepository.findAll();
+	}
+
+	public List<FavouriteTopic> getTopics() {
+		
+		return (List<FavouriteTopic>) favouriteTopicsRepository.findAll();
 	}
 
 }

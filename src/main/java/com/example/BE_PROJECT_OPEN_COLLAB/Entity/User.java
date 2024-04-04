@@ -48,7 +48,7 @@ public class User {
     @Builder.Default
     private Boolean isOrganization=false;
     
-    @ManyToMany(mappedBy = "members")
-    private ArrayList<GroupChatEntity> groupChatsUserAssociatedWith;
+//    @ManyToMany(mappedBy = "members")
+//    private ArrayList<GroupChatEntity> groupChatsUserAssociatedWith;
 
 }

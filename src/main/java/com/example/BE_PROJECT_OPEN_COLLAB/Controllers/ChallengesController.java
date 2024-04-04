@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Challenges;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
 import com.example.BE_PROJECT_OPEN_COLLAB.Services.ChallengesService;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
@@ -108,5 +109,11 @@ public class ChallengesController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+	@GetMapping("/getChallenges/{username}")
+	public ResponseEntity<List<Challenges>> getChallengeBycreatedBy(@PathVariable("username") String username) throws Exception{
+		List<Challenges> challenges =challengesService.getChallengescreatedBy(username);
+		return new ResponseEntity<List<Challenges>>(challenges,HttpStatus.OK);
+	}
     
 }

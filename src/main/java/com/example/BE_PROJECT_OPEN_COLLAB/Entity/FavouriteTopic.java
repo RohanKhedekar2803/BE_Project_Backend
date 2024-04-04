@@ -1,5 +1,7 @@
 package com.example.BE_PROJECT_OPEN_COLLAB.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,5 +26,10 @@ public class FavouriteTopic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	private String Topicname;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "username")
+	private User user;
 	
 }
