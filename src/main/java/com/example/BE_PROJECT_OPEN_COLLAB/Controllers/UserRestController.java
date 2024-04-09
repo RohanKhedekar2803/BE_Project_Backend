@@ -44,6 +44,12 @@ public class UserRestController {
 		return new ResponseEntity<String>("usersaved", HttpStatus.OK);
 	}
 	
+	@GetMapping("/getRecommendedFriends/{username}")
+	public ResponseEntity<List<UserResponse>> getFriends(@PathVariable("username") String username){
+	    List<UserResponse> users=userServices.getRecomendedFriends(username);
+	    
+	    return new ResponseEntity<List<UserResponse>>(users,HttpStatus.OK);
+	}
 
 	
 

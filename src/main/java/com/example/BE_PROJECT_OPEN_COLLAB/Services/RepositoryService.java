@@ -123,7 +123,8 @@ public class RepositoryService {
 	    Specification<Repositor> spec = Specification.where(null);
 	    if (!filterRepos.getHasLanguage().isEmpty()) {
 	        spec = spec.and(withHasLanguage(filterRepos.getHasLanguage()));
-	    } else if (!filterRepos.getHasTopic().isEmpty()) {
+	    } 
+	    if (!filterRepos.getHasTopic().isEmpty()) {
 	        spec = spec.and(withTopicContaining(filterRepos.getHasTopic()));
 	    }
 	    

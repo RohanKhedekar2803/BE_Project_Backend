@@ -69,5 +69,6 @@ public class UserController {
 	public ResponseEntity<List<User>> getConnected() {
 		return ResponseEntity.ok(userServices.getAllUsers());
 	}
+	
 
 }

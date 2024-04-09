@@ -41,24 +41,6 @@ public class ChallengesController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-    //get all challenges
-    @PostMapping("/get/")
-    public ResponseEntity<List<Challenges>> retrieveChallenges(
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestBody FilterRepos filterChallenges
-            ) {
-
-        List<Challenges> result = challengesService.getChallenges(pageNo, pageSize, sortBy, filterChallenges);
-//
-        if (result == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
     
     // Delete a challenge by id
     @DeleteMapping("/{id}")
@@ -86,9 +68,9 @@ public class ChallengesController {
     }
     
     //..............................................................................
+
     
-    //get all challenges
-    @PostMapping("/getbyprofile/")
+    @PostMapping("/getAllChallengesByProfile/")
     public ResponseEntity<List<Challenges>> retrieveChallengesByProfile(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -110,7 +92,96 @@ public class ChallengesController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
-	@GetMapping("/getChallenges/{username}")
+    @PostMapping("/getAllHackathonsByProfile/")
+    public ResponseEntity<List<Challenges>> retrieveHackathonsByProfile(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "recommended") String sortBy,
+            @RequestBody FilterRepos filterChallenges,
+            @RequestParam(defaultValue = "") String username
+            ) {
+    	
+    	//dummy data 
+    			String[] userLanguages = {"Java", "Python", "JavaScript"};
+    			String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+    			
+        List<Challenges> result = challengesService.getHackathonsByProfile(pageNo, pageSize, sortBy, filterChallenges, userLanguages, userTopics, username);
+
+        if (result == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    @PostMapping("/getAllBountyByProfile/")
+    public ResponseEntity<List<Challenges>> retrieveBountyByProfile(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "recommended") String sortBy,
+            @RequestBody FilterRepos filterChallenges,
+            @RequestParam(defaultValue = "") String username
+            ) {
+    	
+    	//dummy data 
+    			String[] userLanguages = {"Java", "Python", "JavaScript"};
+    			String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+    			
+        List<Challenges> result = challengesService.getBountiesByProfile(pageNo, pageSize, sortBy, filterChallenges, userLanguages, userTopics, username);
+
+        if (result == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    @PostMapping("/getAllHiringsByProfile/")
+    public ResponseEntity<List<Challenges>> retrieveHiringsByProfile(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "recommended") String sortBy,
+            @RequestBody FilterRepos filterChallenges,
+            @RequestParam(defaultValue = "") String username
+            ) {
+    	
+    	//dummy data 
+    			String[] userLanguages = {"Java", "Python", "JavaScript"};
+    			String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+    			
+        List<Challenges> result = challengesService.getHiringByProfile(pageNo, pageSize, sortBy, filterChallenges, userLanguages, userTopics, username);
+
+        if (result == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    @PostMapping("/getAllSoloChallengeByProfile/")
+    public ResponseEntity<List<Challenges>> retrieveSoloCyhallengeByProfile(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "recommended") String sortBy,
+            @RequestBody FilterRepos filterChallenges,
+            @RequestParam(defaultValue = "") String username
+            ) {
+    	
+    	//dummy data 
+    			String[] userLanguages = {"Java", "Python", "JavaScript"};
+    			String[] userTopics = {"Machine Learning", "Artificial Intelligence", "Cloud"};
+    			
+        List<Challenges> result = challengesService.getSoloByProfile(pageNo, pageSize, sortBy, filterChallenges, userLanguages, userTopics, username);
+
+        if (result == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    // this is for get challenmges 
+	@GetMapping("/getOrganizationsChallenges/{username}")
 	public ResponseEntity<List<Challenges>> getChallengeBycreatedBy(@PathVariable("username") String username) throws Exception{
 		List<Challenges> challenges =challengesService.getChallengescreatedBy(username);
 		return new ResponseEntity<List<Challenges>>(challenges,HttpStatus.OK);

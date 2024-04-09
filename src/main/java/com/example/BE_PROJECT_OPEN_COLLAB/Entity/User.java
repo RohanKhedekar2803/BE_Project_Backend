@@ -3,7 +3,6 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.BE_PROJECT_OPEN_COLLAB.GroupChat.GroupChatEntity;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.Status;
 
 import io.micrometer.common.lang.Nullable;

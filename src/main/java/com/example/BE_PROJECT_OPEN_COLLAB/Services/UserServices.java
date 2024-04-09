@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
+import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Challenges;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteLanguage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteTopic;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
@@ -38,6 +40,9 @@ public class UserServices {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private CosineSimilarity cosineSimilarity;
 
 	public UserResponse saveUser(User newUser) throws CustomException{
 		
@@ -195,7 +200,7 @@ public class UserServices {
 	    if (user.isPresent() && user.get().getFavouriteTopic() != null) {
 	        List<String> favoriteTopics = new ArrayList<>();
 	        for (FavouriteTopic topic : user.get().getFavouriteTopic()) {
-	            favoriteTopics.add(topic.getTopicname());
+	            favoriteTopics.add("'"+topic.getTopicname()+"'");
 	        }
 	        return favoriteTopics.toArray(new String[favoriteTopics.size()]);
 	    }
@@ -240,4 +245,67 @@ public class UserServices {
 		return (List<FavouriteTopic>) favouriteTopicsRepository.findAll();
 	}
 
+	public List<UserResponse> getRecomendedFriends(String Username){
+		Optional<User> user=userRepository.findById(Username);
+		if(user.isEmpty()) {
+			throw new CustomException(Username + "not found ");
+		}
+		List<User> allUsers=userRepository.findAll();
+		allUsers.removeIf( (User)->  User.getUsername()==Username );
+		
+		
+		//ml model
+		String[] userLanguages = {};
+		String[] userTopics = {};
+	     userLanguages =getFavoriteLanguagesByUsernameFromDb(Username);
+	     userTopics =getFavoriteTopicsByUsernameFromDb(Username);
+        List<List<String>> OtherUsersdocuments = extractLanguagesAndTopics(allUsers);
+//
+//        // Sort challenges using TF-IDF algorithm based on user languages and topics
+        List<Integer> sortedIndices = cosineSimilarity.sortPeopleByCosineSimilarity(userLanguages, userTopics, OtherUsersdocuments);
+//
+//        // Map the sorted indices to the list of challenges
+        List<User> sortedusers= new ArrayList<>();
+        for (int index : sortedIndices) {
+        	sortedusers.add(allUsers.get(index));
+        }
+		
+		
+		
+		
+		
+		
+		// ml end
+		
+		
+		List <UserResponse>list= new ArrayList<>();
+		for(User User: sortedusers) {
+			list.add(UserResponse.builder()
+					.nickname(User.getNickname())
+					.username(User.getUsername())
+					.isOrganization(User.getIsOrganization())
+					.build());
+		}
+		
+		return list;
+	}
+
+	private List<List<String>> extractLanguagesAndTopics(List<User> allUsers) {
+		 List<List<String>> documents = new ArrayList<>();
+	        for (User user : allUsers) {
+	            List<String> usersdata = new ArrayList<>();
+	            // Add languages and topics from the challenge to the document
+	            for(FavouriteLanguage lan : user.getFavouriteLanguages()) {
+	            	 usersdata.add(lan.getLanguageName());
+	            }
+	            
+	            for(FavouriteTopic topic : user.getFavouriteTopic()) {
+	            	 usersdata.add(topic.getTopicname());
+	            }
+	           
+	            documents.add(usersdata);
+	        }
+	        return documents;
+	}
+	
 }

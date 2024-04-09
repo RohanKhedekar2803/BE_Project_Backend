@@ -2,6 +2,8 @@ package com.example.BE_PROJECT_OPEN_COLLAB.Entity;
 
 import java.util.List;
 
+import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.ChallengeType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,13 +36,11 @@ public class Challenges {
 		public String topics;
 		public String startDateAndTime;
 		public String endDateAndTime;
-		public boolean isHackathon;
-		public boolean isBounty;
-		public boolean isHiring;
-		public boolean isSolo;
 		public Long maxPeopleinTeam;
 		public Long minPeopleinTeam;
 		public Long salaryPerYear;
 		public Long prize;
 		public List<String> relatedLinks;
+		
+		private ChallengeType challengeType;
 }
