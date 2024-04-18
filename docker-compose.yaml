@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - mynetwork  # Assigning to custom network
 
   mysqldb:
     image: "mysql:8.0.34"
@@ -26,3 +28,8 @@ services:
     environment:
       MYSQL_DATABASE: opencollab
       MYSQL_ROOT_PASSWORD: Rohan@2803
+    networks:
+      - mynetwork  # Assigning to custom network
+
+networks:
+  mynetwork:  # Defining custom network
