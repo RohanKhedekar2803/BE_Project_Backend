@@ -11,7 +11,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/opencollab
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Rohan@2803
-      
+    # Add a health check to wait for MySQL service to be ready
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   mysqldb:
     image: "mysql:8.0.34"
     restart: always
