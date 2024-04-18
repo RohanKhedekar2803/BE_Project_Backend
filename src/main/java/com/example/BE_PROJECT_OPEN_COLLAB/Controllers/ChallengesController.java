@@ -33,9 +33,10 @@ public class ChallengesController {
     private ChallengesService challengesService;
 
     //while sending data from fronend for topics send in "topics": "['aws', 'aws-sdk', 'go']", thsi format othrwqise filter wont work
-    @PostMapping("/save")
-    public ResponseEntity<Challenges> addChallenge(@RequestBody Challenges challenge) {
-        Challenges result = challengesService.save(challenge);
+    @PostMapping("/save/{username}")
+    public ResponseEntity<Challenges> addChallenge(@RequestBody Challenges challenge,
+    		@PathVariable("username") String username) {
+        Challenges result = challengesService.save(challenge,username);
         if (result == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

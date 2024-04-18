@@ -15,7 +15,12 @@ import org.springframework.stereotype.Service;
 import com.example.BE_PROJECT_OPEN_COLLAB.CustomException;
 import com.example.BE_PROJECT_OPEN_COLLAB.CosineSimilarityAlgorithm.CosineSimilarity;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Challenges;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteTopic;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.Repositor;
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
 import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.ChallengesRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.FavouriteTopicsRepository;
+import com.example.BE_PROJECT_OPEN_COLLAB.Repositories.UserRepository;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.ChallengeType;
 import com.example.BE_PROJECT_OPEN_COLLAB.Utilities.FilterRepos;
 
@@ -28,12 +33,30 @@ public class ChallengesService {
     @Autowired
     private UserServices userServices;
     
+    @Autowired
+    private FavouriteTopicsRepository favouriteTopicsRepository;
+    
     
     
     @Autowired
     private CosineSimilarity demo;
+    
+    @Autowired
+    private UserRepository userRepository;
 
-    public Challenges save(Challenges challenge) {
+    public Challenges save(Challenges challenge, String username) {
+    	
+    	User user=userRepository.findByUsername(username);
+    	if(user==null) {
+    		throw new CustomException(username + "not valid");
+    	}
+    	
+    	 String TopicsArray= challenge.getTopics();
+    	 String[] tokens = TopicsArray.replaceAll("[\\[\\]]", "").split(",\\s*");
+    	 for (int i = 0; i < tokens.length; i++) {
+             tokens[i] = tokens[i].replaceAll("'", "");
+         }
+		saveAllFavouriteTopics(tokens,user);
         return challengesRepository.save(challenge);
     }
     
@@ -120,9 +143,18 @@ public class ChallengesService {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), hasLanguage);
     }
 
-    static Specification<Challenges> withTopicContaining(String topic) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%" + topic + "%");
-    }
+//    static Specification<Challenges> withTopicContaining(String topic) {
+//        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%" + topic + "%");
+//    }
+    
+	static Specification<Challenges> withTopicContaining(String topic) {
+		return (root, query, criteriaBuilder) ->{
+			return criteriaBuilder.like(
+	                criteriaBuilder.lower(root.get("topics")), 
+	                "%" + topic.toLowerCase()+"'" + "%"
+	            );
+		};
+	}
     
     static Specification<Challenges> isChallengeType(String Challenge) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("ChallengeType"), Challenge);
@@ -144,11 +176,11 @@ public class ChallengesService {
     		ChallengeType challengeType) {
         List<Challenges> filteredChallenges = new ArrayList<>(challenges);
 
-        if (filterChallenges.getHasLanguage().length() > 0) {
-            filteredChallenges.removeIf(challenge -> challenge.getLanguage().equals(filterChallenges.getHasLanguage()));
+        if (!filterChallenges.getHasLanguage().isEmpty()) {
+            filteredChallenges.removeIf(challenge -> !challenge.getLanguage().toLowerCase().contains(filterChallenges.getHasLanguage().toLowerCase()));
         } 
         if (!filterChallenges.getHasTopic().isEmpty()) {
-            filteredChallenges.removeIf(challenge -> !challenge.getTopics().contains(filterChallenges.getHasTopic()));
+            filteredChallenges.removeIf(challenge -> !challenge.getTopics().toLowerCase().contains(filterChallenges.getHasTopic().toLowerCase()));
         }
         
         if(challengeType!=null) {
@@ -468,7 +500,7 @@ public class ChallengesService {
 	            String topic = filterChallenges.getHasTopic();
 
 	            // Remove leading and trailing whitespaces
-	            if (language != null) {
+	            if (language != "") {
 	                language = language.trim();
 	                if (!language.isEmpty()) {
 	                    spec = spec.and(withHasLanguage(language));
@@ -476,7 +508,7 @@ public class ChallengesService {
 	            }
 
 	            // Remove leading and trailing whitespaces
-	            if (topic != null) {
+	            if (topic != "") {
 	                topic = topic.trim();
 	                if (!topic.isEmpty()) {
 	                    spec = spec.and(withTopicContaining(topic));
@@ -515,4 +547,17 @@ public class ChallengesService {
 	    }
 	    
 	    //helper for ml 
+	    
+	    
+	    private List<FavouriteTopic> saveAllFavouriteTopics(String[] tokens, User user) {
+	            List<FavouriteTopic> favouriteTopics = new ArrayList<>();
+	            for (String topic : tokens) {
+	                FavouriteTopic favouriteTopic = new FavouriteTopic();
+	                favouriteTopic.setTopicname(topic);
+	                favouriteTopic.setUser(user);
+	                favouriteTopics.add(favouriteTopic);
+	            }
+	            return (List<FavouriteTopic>) favouriteTopicsRepository.saveAll(favouriteTopics);
+	        
+	    }
 }

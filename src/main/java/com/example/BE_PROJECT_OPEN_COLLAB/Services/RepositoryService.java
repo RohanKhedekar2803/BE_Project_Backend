@@ -98,7 +98,12 @@ public class RepositoryService {
 	}
 
 	static Specification<Repositor> withTopicContaining(String topic) {
-		return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("topics"), "%'" + topic + "'%");
+		return (root, query, criteriaBuilder) ->{
+			return criteriaBuilder.like(
+	                criteriaBuilder.lower(root.get("topics")), 
+	                "%" + topic.toLowerCase() + "%"
+	            );
+		};
 	}
 	
 	
