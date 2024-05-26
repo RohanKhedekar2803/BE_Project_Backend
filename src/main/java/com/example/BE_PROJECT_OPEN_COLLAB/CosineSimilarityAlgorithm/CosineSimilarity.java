@@ -73,6 +73,7 @@ public class CosineSimilarity {
 	}
 
 	private double computeCosineSimilarity(List<String> document1, List<String> document2) {
+		// Step 1: Compute term frequency (TF) for each document
 		Map<String, Integer> tf1 = computeTermFrequency(document1);
 		Map<String, Integer> tf2 = computeTermFrequency(document2);
 

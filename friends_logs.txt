@@ -1,11 +1,11 @@
 People ranked in descending order of similarity to user:
-User languages and topics: ['TypeScript', 'Java', 'JavaScript', 'HTML', 'C++', 'Jupyter Notebook', 'Python'] []
+User languages and topics: ['Jupyter Notebook', 'Python', 'JavaScript', 'CSS', 'Java'] ['Operating System', 'templating', 'oracle', 'mysql', 'mongodb']
 
 Person ID: 0
-Similarity with user: 0.6761234037828131
-Person's languages and topics: ['jupyter notebook', 'python', 'javascript', 'css', 'java']
+Similarity with user: 0.3265986323710904
+Person's languages and topics: ['typescript', 'java', 'javascript', 'html', 'c++', 'jupyter notebook', 'python', aws, cloud, networking, backend, docker, frontend, devops, loud]
 
 Person ID: 1
-Similarity with user: 0.5714285714285714
-Person's languages and topics: ['go', 'typescript', 'javascript', 'html', 'php', 'css', 'python']
+Similarity with user: 0.08195375470622294
+Person's languages and topics: ['go', 'typescript', 'javascript', 'html', 'php', 'css', 'python', aws, unix, python , ai, deep leaning , neural networks , pytorch, python , ai, deep leaning , neural networks , pytorch, python , ai, deep leaning , neural networks , pytorch, python , ai, deep leaning , neural networks , pytorch, python , ai, deep leaning , neural networks , pytorch]
 
