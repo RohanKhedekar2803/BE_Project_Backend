@@ -33,13 +33,6 @@ public class ChatController {
 
 	@Autowired
 	public SimpMessagingTemplate messagingTemplatequeue;
-
-	@GetMapping("/chats/{senderId}/{receiverId}")
-	public ResponseEntity<List<ChatMessage>> findChats(@PathVariable("senderId") String senderId,
-			@PathVariable("receiverId") String receiverId) {
-
-		return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
-	}
 	
 
 	

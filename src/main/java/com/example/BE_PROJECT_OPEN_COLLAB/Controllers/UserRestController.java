@@ -64,6 +64,13 @@ public class UserRestController {
 
 		return ResponseEntity.ok(chatMessageService.saveMessageInDatabase(chatMessage));
 	}
+	
+	@GetMapping("/chats/{senderId}/{receiverId}")
+	public ResponseEntity<List<ChatMessage>> findChats(@PathVariable("senderId") String senderId,
+			@PathVariable("receiverId") String receiverId) {
+
+		return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
+	}
 
 	
 
