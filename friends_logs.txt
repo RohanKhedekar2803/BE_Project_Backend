@@ -1,37 +1,45 @@
 People ranked in descending order of similarity to user:
-User languages and topics: ['TypeScript', 'Java', 'JavaScript', 'HTML', 'C++', 'Jupyter Notebook', 'Python'] ['aws', 'cloud', 'networking', 'backend', 'docker', 'containers', 'devops', 'regex', 'styling', 'operations', 'linting']
+User languages and topics: ['TypeScript', 'Java', 'JavaScript', 'HTML', 'C++', 'Jupyter Notebook', 'Python'] ['aws', 'cloud', 'networking', 'backend', 'docker', 'containers', 'devops', 'regex', 'styling', 'operations', 'linting', 'string', 'aws']
 
-Person ID: 9
-Similarity with user: 0.42640143271122094
+Person ID: 11
+Similarity with user: 0.385694607919935
 Person's languages and topics: ['javascript', 'css', 'html', 'typescript', 'plsql', 'java', 'jupyter notebook', 'python', 'dart', 'assembly', 'php']
 
-Person ID: 8
-Similarity with user: 0.3849001794597506
+Person ID: 9
+Similarity with user: 0.3481553119113957
 Person's languages and topics: ['ejs', 'css', 'javascript', 'typescript', 'html', 'c++']
 
-Person ID: 10
-Similarity with user: 0.3849001794597506
+Person ID: 12
+Similarity with user: 0.3481553119113957
 Person's languages and topics: ['javascript', 'css', 'typescript', 'java', 'python', 'vue']
 
-Person ID: 12
-Similarity with user: 0.3535533905932738
+Person ID: 10
+Similarity with user: 0.3223291856101521
+Person's languages and topics: ['go', 'typescript', 'javascript', 'html', 'php', 'css', 'python']
+
+Person ID: 14
+Similarity with user: 0.31980107453341566
 Person's languages and topics: ['java', 'python', 'css', 'html']
 
 Person ID: 6
-Similarity with user: 0.23570226039551587
+Similarity with user: 0.21320071635561041
 Person's languages and topics: ['c++', 'c', 'dart', 'python']
 
 Person ID: 7
-Similarity with user: 0.22222222222222227
+Similarity with user: 0.20100756305184242
 Person's languages and topics: ['jupyter notebook', 'python', 'javascript', 'css', 'java', 'ga', 'devops-tools', cloud, os, jfrog, unix, templating, oracle, mysql, mongodb, low level programing, cp, ibm cloud]
 
-Person ID: 11
-Similarity with user: 0.1924500897298753
+Person ID: 13
+Similarity with user: 0.17407765595569785
 Person's languages and topics: ['javascript', 'emacs lisp', 'scala', 'clojure', 'typescript', 'ruby']
 
 Person ID: 0
-Similarity with user: 0.15713484026367722
+Similarity with user: 0.1421338109037403
 Person's languages and topics: ['rust', 'c#', 'ruby', 'c++', 'tex', 'powershell', 'actionscript', 'xslt', 'java']
+
+Person ID: 8
+Similarity with user: 0.09782319760890368
+Person's languages and topics: ['ruby', 'javascript', 'php', 'java', 'go', templating, unix, jfrog, templating, unix, jfrog, mongodb, regex]
 
 Person ID: 1
 Similarity with user: 0.0

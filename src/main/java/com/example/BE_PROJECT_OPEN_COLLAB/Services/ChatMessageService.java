@@ -32,6 +32,7 @@ public class ChatMessageService {
 	public ChatMessage saveMessageInDatabase(ChatMessage chatMessage) {
 		var chatId = chatRoomService.getChatRoomId(chatMessage.getSenderId(), chatMessage.getReceiverId(), true);
 		chatMessage.setChatroomId(chatId);
+		chatMessage.setTimeStamp(DateTimeUtils.getCurrentDateTimeInIndia());
 		return chatRoomRepository.save(chatMessage);
 	}
 
@@ -47,8 +48,8 @@ public class ChatMessageService {
 	public boolean sendMessage(ChatMessage chatMessage) {
 			boolean status=false;
 			try {
-				chatMessage.setTimeStamp(DateTimeUtils.getCurrentDateTimeInIndia());
-				ChatMessage savedMessage = saveMessageInDatabase(chatMessage);
+//				chatMessage.setTimeStamp(DateTimeUtils.getCurrentDateTimeInIndia());
+//				ChatMessage savedMessage = saveMessageInDatabase(chatMessage);
 				
 				messagingTemplatequeue.convertAndSend("/users/" + chatMessage.getReceiverId() + "/queue/messages",
 						(Serializable) ChatNotification.builder().messageId(chatMessage.getChatMessageid())

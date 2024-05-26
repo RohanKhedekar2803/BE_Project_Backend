@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.BE_PROJECT_OPEN_COLLAB.Entity.ChatMessage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.FavouriteLanguage;
 import com.example.BE_PROJECT_OPEN_COLLAB.Entity.User;
 import com.example.BE_PROJECT_OPEN_COLLAB.Models.UserResponse;
+import com.example.BE_PROJECT_OPEN_COLLAB.Services.ChatMessageService;
 import com.example.BE_PROJECT_OPEN_COLLAB.Services.UserServices;
 
 @RestController
@@ -23,6 +25,9 @@ public class UserRestController {
 	
 	@Autowired
 	private UserServices userServices;
+	
+	@Autowired
+	private ChatMessageService chatMessageService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> RegisterUser(@RequestBody User user) {
@@ -49,6 +54,15 @@ public class UserRestController {
 	    List<UserResponse> users=userServices.getRecomendedFriends(username);
 	    
 	    return new ResponseEntity<List<UserResponse>>(users,HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/savechat/{senderId}/{receiverId}")
+	public ResponseEntity<ChatMessage> UpdateChats(@PathVariable("senderId") String senderId,
+			@PathVariable("receiverId") String receiverId,
+			@RequestBody ChatMessage chatMessage) {
+
+		return ResponseEntity.ok(chatMessageService.saveMessageInDatabase(chatMessage));
 	}
 
 	
